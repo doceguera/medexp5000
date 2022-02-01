@@ -22,10 +22,4 @@ app.use('/api', apiRouter);
 // /api/v1/expendiente
 // /api/v1/expediente/consultas
 
-
-
-
-
-
-
 module.exports = app;
