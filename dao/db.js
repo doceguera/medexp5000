@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3');
 let db = null;
 
 const initDB = () => {
-  return new Promise ( (accept, reject) => {
+  return new Promise((accept, reject) => {
     let database = new sqlite3.Database(
       //'../data/medexp.sqlite3',
       `./data/${process.env.DB_FILENAME}.sqlite3`,
@@ -14,7 +14,7 @@ const initDB = () => {
         accept(database);
       }
     );
-  } );
+  });
 }
 
 const singletonGetDB = async () => {
@@ -27,8 +27,8 @@ const singletonGetDB = async () => {
 const singletonGetDBnoPromise = () => {
   if (!db) {
     initDB()
-      .then( (database) => { db = database; } )
-      .catch( (err)=> { throw Error('Error de Database') });
+      .then((database) => { db = database; })
+      .catch((err) => { throw Error('Error de Database') });
   }
   return db;
 }

@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const Pacientes = new require('../../../../dao/pacientes/pacientes.model');
-const pacienteModel = new Pacientes();
+const Expedientes = new require('../../../../dao/expedientes/expedientes.model');
+const expedienteModel = new Expedientes();
 
 router.get('/', (req, res) => {
   res.status(200).json(
     {
-      endpoint: 'Pacientes',
+      endpoint: 'Expedientes',
       updates: new Date(2022, 0, 19, 18, 41, 00)
     }
   );
@@ -15,8 +15,8 @@ router.get('/', (req, res) => {
 
 router.get('/all', async (req, res) => {
   try {
-    const rows = await pacienteModel.getAll();
-    res.status(200).json({ status: 'ok', pacientes: rows });
+    const rows = await expedienteModel.getAll();
+    res.status(200).json({ status: 'ok', expedientes: rows });
   } catch (ex) {
     console.log(ex);
     res.status(500).json({ status: 'failed' });
@@ -26,8 +26,8 @@ router.get('/all', async (req, res) => {
 router.get('/byid/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const row = await pacienteModel.getById(parseInt(id));
-    res.status(200).json({ status: 'ok', paciente: row });
+    const row = await expedienteModel.getById(parseInt(id));
+    res.status(200).json({ status: 'ok', expediente: row });
   } catch (ex) {
     console.log(ex);
     res.status(500).json({ status: 'failed' });
@@ -37,8 +37,8 @@ router.get('/byid/:id', async (req, res) => {
 router.get('/byagegender/:age/:gender', async (req, res) => {
   try {
     const { age, gender } = req.params;
-    const row = {}; // await pacienteModel.getById(parseInt(id));
-    res.status(200).json({ status: 'ok', paciente: row });
+    const row = {}; // await expedienteModel.getById(parseInt(id));
+    res.status(200).json({ status: 'ok', expediente: row });
   } catch (ex) {
     console.log(ex);
     res.status(500).json({ status: 'failed' });
@@ -46,9 +46,9 @@ router.get('/byagegender/:age/:gender', async (req, res) => {
 });
 
 router.post('/new', async (req, res) => {
-  const { nombres, apellidos, identidad, email, telefono } = req.body;
+  const { identidad, fecha, descripcion, observacion, registro, ultimaactualizacion } = req.body;
   try {
-    rslt = await pacienteModel.new(nombres, apellidos, identidad, telefono, email);
+    rslt = await expedienteModel.new(identidad, fecha, descripcion, observacion, registro, ultimaactualizacion);
     res.status(200).json(
       {
         status: 'ok',
@@ -68,9 +68,9 @@ router.post('/new', async (req, res) => {
 //router.put();
 router.put('/update/:id', async (req, res) => {
   try {
-    const { nombres, apellidos, identidad, email, telefono } = req.body;
+    const { identidad, fecha, descripcion, observacion, registro, ultimaactualizacion } = req.body;
     const { id } = req.params;
-    const result = await pacienteModel.updateOne(id, nombres, apellidos, identidad, telefono, email);
+    const result = await expedienteModel.updateOne(id, identidad, fecha, descripcion, observacion, registro, ultimaactualizacion);
     res.status(200).json({
       status: 'ok',
       result
@@ -85,7 +85,7 @@ router.put('/update/:id', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await pacienteModel.deleteOne(id);
+    const result = await expedienteModel.deleteOne(id);
     res.status(200).json({
       status: 'ok',
       result
