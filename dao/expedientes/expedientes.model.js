@@ -1,7 +1,7 @@
 const getDb = require('../db');
 let db = null;
 class Expedientes {
-
+ 
   constructor() {
     getDb()
       .then((database) => {
