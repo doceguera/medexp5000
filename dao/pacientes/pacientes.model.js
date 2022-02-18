@@ -1,100 +1,66 @@
-const getDb = require('../db');
-let db = null;
-class Pacientes {
+const ObjectId = require('mongodb').ObjectId;
+const getDb = require('../mongodb');
 
+let db = null;
+
+class Pacientes {
+  collection = null;
   constructor() {
+
     getDb()
       .then((database) => {
         db = database;
+        this.collection = db.collection('Pacientes');
         if (process.env.MIGRATE === 'true') {
-          const createStatement = 'CREATE TABLE IF NOT EXISTS pacientes (id INTEGER PRIMARY KEY AUTOINCREMENT, identidad TEXT, nombre TEXT, apellidos TEXT, email TEXT, telefono TEXT);';
-          db.run(createStatement);
         }
       })
       .catch((err) => { console.error(err) });
   }
 
-  new(nombres, apellidos, identidad, telefono, correo) {
-    return new Promise((accept, reject) => {
-      db.run(
-        'INSERT INTO pacientes (identidad, nombre, apellidos, email, telefono) VALUES (?, ?, ?, ?, ?);',
-        [identidad, nombres, apellidos, correo, telefono],
-        function (err){
-          if (err) {
-            console.error(err);
-            reject(err);
-          }
-          accept(this.lastID);
-        }
-      );
-    });
+  async new(nombres, apellidos, identidad, telefono, email) {
+    const newPaciente = {
+      nombres,
+      apellidos,
+      identidad,
+      telefono,
+      email
+    };
+    const rslt = await this.collection.insertOne(newPaciente);
+    return rslt;
   }
 
-  getAll() {
-    return new Promise((accept, reject) => {
-      db.all('SELECT * from pacientes;', (err, rows) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          accept(rows);
-        }
-      });
-    });
+  async getAll() {
+    const cursor = this.collection.find({});
+    const documents = await cursor.toArray();
+    return documents;
   }
 
-  getById(id) {
-    return new Promise((accept, reject) => {
-      db.get(
-        'SELECT * from pacientes where id=?;',
-        [id],
-        (err, row) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            accept(row);
-          }
-        });
-    });
+  async getById(id) {
+    const _id = ObjectId(id);
+    const filter = { _id };
+    const myDocument = await this.collection.findOne(filter);
+    return myDocument;
   }
 
-  updateOne(id, nombres, apellidos, identidad, telefono, correo) {
-    return new Promise(
-      (accept, reject) => {
-        const sqlUpdate = 'UPDATE pacientes set nombre = ?, apellidos = ?, telefono = ?, identidad = ?, email = ? where id = ?;';
-        db.run(
-          sqlUpdate,
-          [nombres, apellidos, telefono, identidad, correo, id],
-          function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              accept(this);
-            }
-          }
-        );
+  async updateOne(id, nombres, apellidos, identidad, telefono, email) {
+    const filter = { _id: new ObjectId(id) };
+    const updateCmd = {
+      '$set': {
+        nombres,
+        apellidos,
+        identidad,
+        telefono,
+        email
       }
-    );
-  }
+    };
+    const rslt = await this.collection.updateOne(filter, updateCmd);
+  };
 
-  deleteOne(id) {
-    return new Promise(
-      (accept, reject) => {
-        const sqlDelete = 'DELETE FROM pacientes where id = ?;';
-        db.run(
-          sqlDelete,
-          [id],
-          function (err) {
-            if (err) {
-              reject(err);
-            } else {
-              accept(this);
-            }
-          }
-        );
-      }
-    );
+  async deleteOne(id) {
+    const _id = ObjectId(id);
+    const filter = { _id };
+    const myDocs = await this.collection.deleteOne(filter);
+    return myDocs;
   }
 }
 
