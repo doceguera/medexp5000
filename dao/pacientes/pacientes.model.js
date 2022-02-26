@@ -93,7 +93,7 @@ class Pacientes {
   }
 
   //incompleta, borrar un solo dato de los tags repetidos
-async updatePopTag(id, tagEntry) {
+  async updatePopTag(id, tagEntry) {
     console.log(tagEntry);
     const updateCmd = [{
       '$set': {
@@ -102,7 +102,7 @@ async updatePopTag(id, tagEntry) {
             'vars': { 'ix': { '$indexOfArray': ['$tags', tagEntry] } },
             'in': {
               '$concatArrays': [
-                { '$slice': ['$tags', 0, {'$add':[1,'$$ix']}]},
+                { '$slice': ['$tags', 0, { '$add': [1, '$$ix'] }] },
                 [],
                 { '$slice': ['$tags', { '$add': [2, '$$ix'] }, { '$size': '$tags' }] }
               ]
