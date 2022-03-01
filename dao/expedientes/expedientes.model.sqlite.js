@@ -1,4 +1,3 @@
-const ObjectId = require('mongodb').ObjectId;
 const getDb = require('../db');
 let db = null;
 class Expedientes {
@@ -15,7 +14,7 @@ class Expedientes {
       .catch((err) => { console.error(err) });
   }
 
-  async new(identidad, fecha, descripcion, observacion, registro, ultimaactualizacion) {
+  new(identidad, fecha, descripcion, observacion, registro, ultimaactualizacion) {
     return new Promise((accept, reject) => {
       db.run(
         'INSERT INTO expedientes (identidad, fecha, descripcion, observacion, registro, ultimaactualizacion) VALUES (?, ?, ?, ?, ?, ?);',
@@ -31,7 +30,7 @@ class Expedientes {
     });
   }
 
-  async getAll() {
+  getAll() {
     return new Promise((accept, reject) => {
       db.all('SELECT * from expedientes;', (err, rows) => {
         if (err) {
@@ -44,7 +43,7 @@ class Expedientes {
     });
   }
 
-  async getById(id) {
+  getById(id) {
     return new Promise((accept, reject) => {
       db.get(
         'SELECT * from expedientes where id=?;',
@@ -60,7 +59,7 @@ class Expedientes {
     });
   }
 
-  async updateOne(id, identidad, fecha, descripcion, observacion, registro, ultimaactualizacion) {
+  updateOne(id, identidad, fecha, descripcion, observacion, registro, ultimaactualizacion) {
     return new Promise(
       (accept, reject) => {
         const sqlUpdate = 'UPDATE expedientes set identidad = ?, fecha = ?, descripcion = ?, observacion = ?, registro = ?, ultimaactualizacion = ?, where id = ?;';
@@ -79,7 +78,7 @@ class Expedientes {
     );
   }
 
-  async deleteOne(id) {
+  deleteOne(id) {
     return new Promise(
       (accept, reject) => {
         const sqlDelete = 'DELETE FROM expedientes where id = ?;';
