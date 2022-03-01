@@ -1,4 +1,5 @@
 const Pacientes = require('../../medexp5000/dao/pacientes/pacientes.model');
+
 describe('Testing Pacientes Model', () => {
     let pacientesModel = undefined;
     let lastID = 0;

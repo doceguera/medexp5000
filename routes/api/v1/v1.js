@@ -9,7 +9,6 @@ const pacientesRoutes = require('./pacientes/pacientes');
 const expedientesRoutes = require('./expedientes/expedientes');
 const seguridadRoutes = require('./seguridad/seguridad')
 
-
 router.use(passport.initialize());
 //publicos
 router.use('/seguridad', verifyApiHeaderToken, seguridadRoutes);
